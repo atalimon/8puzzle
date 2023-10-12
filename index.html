@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to 8 Puzzle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+ <style>
+
+ </style>
+
+</head>
+<body class=" h-full bg-white dark:bg-black text-white  flex justify-center items-center">
+    <div id="container" class="mx-auto widescreen:w-full  tallscreen:w-full p-4 flex justify-center items-center flex-col h-screen">
+        <div id="hello-puzzle" class="m-12 md:w-xl text-center ">
+            <h1 id="message" class="text-4xl text-black dark:text-white md:text-2xl md:text-center text-center ">Welcome to 8 Puzzle!</h1>
+        </div>
+        <div id="slider" class="drop-shadow-lg shadow-cyan-500/50 border rounded-lg tallscreen:w-[280px] tallscreen:h-[300px] widescreen:w-[400px] widescreen:h-[400px] h-[400px] w-[400px] text-black flex justify-center items-center text-2xl  dark:text-white ">
+            <span class="card md:text-xl" id="first">GAME BY ATALIMON</span>
+            <span class="card hidden md:text-xl" id="second">WEB DEVELOPMENT!</span>
+            <span class="card hidden md:text-xl" id="third">ENJOY THE PUZZLE</span>
+        </div>
+        <div id="start-button" class="m-12 text-xl text-black">
+            <button id="start" class="bg-red-500 text-white p-2 border rounded-lg hover:bg-white hover:text-black hover:drop-shadow-xl dark: text-white bg-red-500">START</button>
+        </div>
+    </div>
+    <div id="game-container" class="mx-auto widescreen:w-4/6  tallscreen:w-full p-4 flex justify-center items-center flex-col h-screen hidden">
+        <div id="pick-puzzle" class="m-8">
+            <h1 id="pick-puzzle-message" class="text-4xl text-black dark:text-white">Pick Your Game!</h1>
+        </div>
+        <div id="games" class=" drop-shadow-lg shadow-cyan-500/50  widescreen:w-[700px]  widescreen:h-2/5 text-black flex justify-center items-center text-2xl dark:text-white md:w-xl tallscreen:w-full tallscreen:h-1/5">
+            <button class="border p-1  widescreen:w-[220px] widescreen:h-48 game tallscreen:w-[120px] tallscreen:h-36 m-2 rounded-xl md:w-xl" id="option-1"><img class="imger w-full h-full object-cover rounded-xl" src="img/dog.jpeg"></button>
+            <button class="border p-1 game widescreen:w-[220px] widescreen:h-48 tallscreen:w-[120px] tallscreen:h-36 m-2 rounded-xl md:w-xl" id="option-2"><img class="imger w-full h-full object-cover rounded-xl" src="img/cat.jpeg"></button>
+            <button class=" border p-1 game widescreen:w-[220px] widescreen:h-48 tallscreen:w-[120px] tallscreen:h-36 m-2 rounded-xl md:w-xl" id="option-3"><img class="imger w-full h-full object-cover rounded-xl" src="img/panda.jpeg"></button>
+        </div>
+        <div id="pick-button" class="m-8 text-xl text-black">
+            <button id="start-game" class="bg-red-500 text-white p-2 border rounded-lg hover:bg-white hover:text-black hover:drop-shadow-xl dark: text-white bg-red-500">Choose</button>
+        </div>
+    </div>
+    <div id="puzzle-container" class=" p-4 flex justify-center items-center flex-col h-[900px] w-full hidden">
+        <ul id="main-container" class=" grid grid-cols-3 grid-rows-3 gap-2 drop-shadow-lg  w-[500px] h-[500px]  text-black rounded-lg border-2 justify-center items-center text-2xl  dark:text-white border-white p-2 tallscreen:w-[400px] tallscreen:h-[400px]">
+            
+        </ul> 
+        <div id="shuffle-controller" class="flex flex-col justify-center gap-4 m-4">
+            <h2 id="shuffle-text" class="text-black  text-2xl ">Choose Shuffle Count</h2>
+            <div class="relative inline-block text-left flex justify-center">
+                <div>
+                  <button id="shuffle-dropdown" class="bg-red-500 text-white p-2 border rounded-lg hover:bg-white hover:text-black hover:drop-shadow-xl dark">
+                    Shuffle
+                  </button>
+                </div>
+                <div id="shuffle-menu" class="hidden absolute z-50 mt-2 w-32 rounded-lg shadow-lg bg-white dark:bg-black ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div class="py-1">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">3 times</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">30 times</a>
+                  </div>
+                </div>
+              </div>
+              
+    </div>
+    </div>
+ 
+    <script src="script.js"></script>
+</body>
+</html>
