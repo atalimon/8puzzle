@@ -18,13 +18,6 @@ let threeOption = document.getElementById('option-3')
 let countdown;
 let count = 4;
 
-const initialState = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9], // 0 represents the empty space
-  ];
-  
-
 
 function slider(cards) {
     
@@ -52,7 +45,6 @@ function slider(cards) {
 }
 
 
-
 startButton.addEventListener('click', function (){
    mainContainer.classList.add('hidden')
    gameContainer.classList.remove('hidden')
@@ -78,66 +70,6 @@ pickButton.forEach((btn) => {
 
 })
 
-const rows = initialState.length;
-const cols = initialState[0].length;
-const grid = Array.from({ length: rows }, () => Array(cols));
-initialState.forEach((row, rowIndex) => {
-  row.forEach((element, colIndex) => {
-    const puzgame = document.createElement("li");
-    puzgame.classList.add(
-      "grid-item",
-      "bg-white",
-      "absolute",
-      "rounded-lg",
-      "text-black",
-      "w-[150px]",
-      "h-[150px]",
-      "tallscreen:w-[120px]",
-      "tallscreen:h-[120px]",
-      "m-1",
-      "p-2",
-      "no-repeat"
-
-    );
-
-
-    if (element !== 1) {
-      puzgame.innerText = element;
-    } else {
-      // If the element is 0 (empty space), you can add a special class or style
-      puzgame.classList.add("hidden");
-    }
-   
-    
-
-    const row = rowIndex;
-    const col = colIndex;
-    grid[row][col] = puzgame;
-    puzgame.style.left = `${col * 155}px`;
-    puzgame.style.top = `${row * 155}px`;
-    puzgame.style.backgroundImage = "url('dog.jpeg')";
-    const backgroundPositionX = `-${colIndex * 150}px`;
-    const backgroundPositionY = `-${rowIndex * 150}px`;
-    puzgame.style.backgroundPosition = `${backgroundPositionX} ${backgroundPositionY}`;
-    
-
-     // Add click event listener for swapping
-     puzgame.addEventListener("click", () => {
-      let move = [rowIndex, colIndex]
-
-        swapElements(rowIndex, colIndex)
-        move = [rowIndex, colIndex]
-        console.log(grid)
- 
-      
-    
-    });
-
-    PuzzleImageContainer.appendChild(puzgame);
-  });
-
-});
-
 
 const doggie_img = document.createElement('img')
 doggie_img.src = '/build/img/dog.jpeg'
@@ -159,99 +91,108 @@ gameStartButton.addEventListener('click', function(){
 })
 
 
+let counter = 0; 
 
-document.getElementById("shuffle-dropdown").addEventListener("click", function () {
-    const menu = document.getElementById("shuffle-menu");
-    menu.classList.toggle("hidden");
+  const initialState = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+  ];
+
+  const rows = initialState.length;
+  const cols = initialState[0].length;
+
+  const grid = Array.from({ length: rows }, () => Array(cols));
+
+  const puzzlePieces = Array.from({ length: rows }, () => Array(cols));
+
+  initialState.forEach((row, rowIndex) => {
+    row.forEach((element, colIndex) => {
+      counter++;
+      const puzgame = document.createElement('li');
+      puzgame.classList.add(
+        'grid-item',
+        'bg-white',
+        'absolute',
+        'rounded-lg',
+        'text-black',
+        'w-[150px]',
+        'h-[150px]',
+        'm-1',
+        'p-2',
+        'no-repeat',
+        'transition',
+        'duration-300'
+      );
+
+      puzgame.setAttribute('data-id', element);
+
+      const row = rowIndex;
+      const col = colIndex;
+      grid[row][col] = puzgame;
+      puzzlePieces[row][col] = puzgame; 
+      puzgame.style.left = `${col * 160}px`;
+      puzgame.style.top = `${row * 160}px`;
+      puzgame.style.backgroundImage = "url('dog.jpeg')";
+      const backgroundPositionX = `-${colIndex * 150}px`;
+      const backgroundPositionY = `-${rowIndex * 150}px`;
+      puzgame.style.backgroundPosition = `${backgroundPositionX} ${backgroundPositionY}`;
+      PuzzleImageContainer.appendChild(puzgame);
+    });
   });
-  
 
-  document.addEventListener("click", function (event) {
-    const menu = document.getElementById("shuffle-menu");
-    if (!event.target.matches("#shuffle-dropdown")) {
-      menu.classList.add("hidden");
-    }
-  });
-  
-const puzzle = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+  const hiddenElement = document.querySelector('[data-id="1"]');
+  hiddenElement.classList.add('hidden');
 
-function find_memo(arr) {
-    let found = false; 
-    for (let row = 0; row < arr.length; row++) {
-        for (let col = 0; col < arr[row].length; col++) {
-            if (arr[row][col] === 0) {
-                return {row, col}
-            }
+ 
+  puzzlePieces.forEach((row, rowIndex) => {
+    row.forEach((element, colIndex) => {
+      element.addEventListener('click', () => {
+        const targetRow = findElementPosition(element).row;
+        const targetCol = findElementPosition(element).col;
+
+        
+        const hiddenRow = findElementPosition(hiddenElement).row;
+        const hiddenCol = findElementPosition(hiddenElement).col;
+
+        
+        if (
+          (Math.abs(targetRow - hiddenRow) === 1 && targetCol === hiddenCol) ||
+          (Math.abs(targetCol - hiddenCol) === 1 && targetRow === hiddenRow)
+        ) {
+          
+          [puzzlePieces[hiddenRow][hiddenCol], puzzlePieces[targetRow][targetCol]] = [
+            puzzlePieces[targetRow][targetCol],
+            puzzlePieces[hiddenRow][hiddenCol],
+          ];
+
+          
+          const tempTop = puzzlePieces[hiddenRow][hiddenCol].style.top;
+          const tempLeft = puzzlePieces[hiddenRow][hiddenCol].style.left;
+          puzzlePieces[hiddenRow][hiddenCol].style.top = puzzlePieces[targetRow][targetCol].style.top;
+          puzzlePieces[hiddenRow][hiddenCol].style.left = puzzlePieces[targetRow][targetCol].style.left;
+          puzzlePieces[targetRow][targetCol].style.top = tempTop;
+          puzzlePieces[targetRow][targetCol].style.left = tempLeft;
+
+          
+          [hiddenRow, hiddenCol] = [targetRow, targetCol];
         }
-    }
-}
-function valid(arr, [row, col]){
-  const memo = find_memo(arr)
-   if (memo === null){
-       return false;
-   }
+      });
+    });
+  });
 
-   return (
-       (Math.abs(memo.row - row) === 1 && memo.col === col) ||
-       (Math.abs(memo.col - col) === 1 && memo.row == row)
-   );
-}
-
-
-function swap(arr, [row, col]) {
-  if (valid(arr, [row, col])) {
-    const memo = find_memo(arr);
-    const temp = arr[row][col];
-    arr[row][col] = arr[memo.row][memo.col];
-    arr[memo.row][memo.col] = temp;
-
-    // Update the grid and displayed numbers on the tiles
-    grid[row][col].innerText = temp;
-    grid[memo.row][memo.col].innerText = "";
-    return row, col;
-  }
-}
-
-function swapElements(row, col) {
-  const emptyPosition = findEmptyPosition(grid);
-  if (emptyPosition) {
-    const clickedElement = grid[row][col];
-    const emptyElement = grid[emptyPosition.row][emptyPosition.col];
-
-    grid[row][col] = emptyElement;
-    grid[emptyPosition.row][emptyPosition.col] = clickedElement;
-
-    const emptyLeft = emptyElement.style.left;
-    const emptyTop = emptyElement.style.top;
-    emptyElement.style.left = clickedElement.style.left;
-    emptyElement.style.top = clickedElement.style.top;
-    clickedElement.style.left = emptyLeft;
-    clickedElement.style.top = emptyTop;
-
-    // Update the class names for swapping
-  }
-}
-
-function poss(arr) {
-    const memas = find_memo(arr);
-    const row = memas.row;
-    const col = memas.col + 1;
-    const tmp = arr[row][col];
-    
-    
-}
-poss(puzzle)
-
-function findEmptyPosition(grid) {
-    for (let row = 0; row < grid.length; row++) {
-      for (let col = 0; col < grid[row].length; col++) {
-        if (grid[row][col].innerText === "") {
+  function findElementPosition(element) {
+    for (let row = 0; row < puzzlePieces.length; row++) {
+      for (let col = 0; col < puzzlePieces[row].length; col++) {
+        if (puzzlePieces[row][col] === element) {
           return { row, col };
         }
       }
     }
-    return null; // Return null if no empty position is found (which should not happen in your case)
+    
+    return { row: -1, col: -1 };
   }
+  
   
 
 
