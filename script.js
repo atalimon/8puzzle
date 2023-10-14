@@ -118,6 +118,8 @@ let counter = 0;
         'text-black',
         'w-[150px]',
         'h-[150px]',
+        'tallscreen:w-[125px]',
+        'tallscreen:h-[125px]',
         'm-1',
         'p-2',
         'no-repeat',
@@ -131,8 +133,8 @@ let counter = 0;
       const col = colIndex;
       grid[row][col] = puzgame;
       puzzlePieces[row][col] = puzgame; 
-      puzgame.style.left = `${col * 160}px`;
-      puzgame.style.top = `${row * 160}px`;
+      puzgame.style.left = `${col * 130}px`;
+      puzgame.style.top = `${row * 130}px`;
       puzgame.style.backgroundImage = "url('dog.jpeg')";
       const backgroundPositionX = `-${colIndex * 150}px`;
       const backgroundPositionY = `-${rowIndex * 150}px`;
