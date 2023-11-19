@@ -157,7 +157,8 @@ function CreatePuzzlePieces () {
         'transition',
         'duration-300',
         'border-4',
-        'hover:opacity-80',
+        'opacity-80',
+        'hover:opacity-100',
         'pointer-cursor'
       );
 
@@ -175,7 +176,7 @@ function CreatePuzzlePieces () {
       const backgroundPositionY = `-${rowIndex * 150}px`;
       puzgame.style.backgroundPosition = `${backgroundPositionX} ${backgroundPositionY}`;
       PuzzleImageContainer.appendChild(puzgame);
-      console.log(last)
+
         
       if (element === 1) {
         hiddenElement = puzgame
@@ -197,7 +198,7 @@ tree.addEventListener('click', function(){
   PuzzleImageContainer.classList.remove('pointer-events-none')
   PuzzleImageContainer.classList.add('cursor-pointer')
   shuffletext.classList.add('hidden')
-
+  shuffle()
   //start shuffle 
   
 })
@@ -208,7 +209,7 @@ thirty.addEventListener('click', function(){
   PuzzleImageContainer.classList.remove('pointer-events-none')
   PuzzleImageContainer.classList.add('cursor-pointer')
   shuffletext.classList.add('hidden')
-
+  shuffle()
   
   //Start shuffle
 })
@@ -216,6 +217,8 @@ thirty.addEventListener('click', function(){
 
 
 // Create a function that will compare puzzlePieces[pieces] are in the same cordinates as as grid[pieces] if piece is border color = green, not then border color == red
+
+let listofMoves = [[0, 0]]
 
 
 
@@ -238,6 +241,9 @@ thirty.addEventListener('click', function(){
             const tempElement = puzzlePieces[currentRow][currentCol];
             puzzlePieces[currentRow][currentCol] = puzzlePieces[targetRow][targetCol];
             puzzlePieces[targetRow][targetCol] = tempElement;
+
+            element.style.transition = 'top 0.5s, left 0.5s';
+            tempElement.style.transition = 'top 0.5s, left 0.5s';
   
             const tempTop = tempElement.style.top;
             const tempLeft = tempElement.style.left;
@@ -245,11 +251,25 @@ thirty.addEventListener('click', function(){
             tempElement.style.left = element.style.left;
             element.style.top = tempTop;
             element.style.left = tempLeft;
+
+            setTimeout(() => {
+              element.style.transition = '';
+              tempElement.style.transition = '';
+            }, 500); // 500ms is the duration of the transition
   
             
             currentRow = targetRow;
             currentCol = targetCol;
             compare()
+            console.log(get_possible_moves())
+
+            let move = [targetRow, targetCol]
+
+            listofMoves.push(move)
+            
+           
+            
+            
 
           }
         });
@@ -257,6 +277,8 @@ thirty.addEventListener('click', function(){
     });
   }
   
+ 
+
 
   function findElementPosition(element) {
     for (let row = 0; row < puzzlePieces.length; row++) {
@@ -284,17 +306,130 @@ thirty.addEventListener('click', function(){
     }
   }
   
-  // functions finds positions of null number
+// Store the ONLY last move 
+let possible_moves = []
 
-  // function returns valid moves 
-  // 1. Where is the null element?
-  // 2. What are the options for the movable object? return row col, row col, except last move 
-  // 3. Make a random decision, swap, save the last move 
+// last_move initial = 0, 0, after that findElementPos is the lastmove
 
 
-  // random shuffle 3 or 30 
 
 
+function get_possible_moves() {
+
+  // if last move in the possible_moves remove
+  
+  possible_moves.splice(0, possible_moves.length)
+ 
+   
+  let row =  findElementPosition(hiddenElement).row
+  let col = findElementPosition(hiddenElement).col
+
+  if (row === 1) {
+    possible_moves.push([row - 1, col], [row + 1, col])
+  } else if (row < 1) {
+    possible_moves.push([row + 1, col])
+  } else {
+    possible_moves.push([row - 1, col])
+  }
+
+  if (col === 1) {
+    possible_moves.push([row, col - 1], [row, col + 1])
+  } else if (col < 1) {
+    possible_moves.push([row, col  + 1])
+  } else {
+    possible_moves.push([row, col  - 1])
+  }
+  
+
+  
+
+  for (let i = 0; i < possible_moves.length; i++) {
+    let isEqual = true;
+  
+    for (let j = 0; j < possible_moves[i].length; j++) {
+      if (possible_moves[i][j] !== listofMoves[listofMoves.length - 1][j]) {
+        isEqual = false;
+        break;
+      }
+    }
+  
+    if (isEqual) {
+      possible_moves.splice(i, 1);
+      i--;
+
+    } else {
+      
+    }
+  }
+
+  let randomnum =  possible_moves[Math.floor(Math.random() * possible_moves.length)]
+
+  
+  return randomnum; 
+  
+}
+
+
+function shuffle() {
+  let randomnum =  possible_moves[Math.floor(Math.random() * possible_moves.length)]
+  let j = 3
+
+while (j !== 0 ) {
+
+    let targetRow = findElementPosition(randomnum).row;
+    let targetCol = findElementPosition(randomnum).col;
+    let currentRow = findElementPosition(hiddenElement).row;
+    let currentCol = findElementPosition(hiddenElement).col;
+
+      let tempoElement = puzzlePieces[currentRow][currentCol];
+      puzzlePieces[currentRow][currentCol] = puzzlePieces[targetRow][targetCol];
+      puzzlePieces[targetRow][targetCol] = tempoElement;
+
+      randomnum.style.transition = 'top 0.5s, left 0.5s';
+      tempoElement.style.transition = 'top 0.5s, left 0.5s';
+
+      let tempoTop = tempoElement.style.top;
+      let tempoLeft = tempoElement.style.left;
+      tempoElement.style.top = randomnum.style.top;
+      tempoElement.style.left = randomnum.style.left;
+      randomnum.style.top = tempoTop;
+      randomnum.style.left = tempoLeft;
+
+      setTimeout(() => {
+        randomnum.style.transition = '';
+        tempoElement.style.transition = '';
+      }, 500); // 500ms is the duration of the transition
+
+      
+      currentRow = targetRow;
+      currentCol = targetCol;
+      j--;
+    
+    }
+
+      
+     
+      
+      
+
+    
+
+
+}
+
+
+
+// pick random move from possible_moves
+// Shuffle 3 times 
+
+// Pick random move from ...
+// Shuffle 30 times
+
+
+// Checker function / After each swap > if all elements same like init pos, hide game, show congrts 
+
+
+ 
 
 
 
