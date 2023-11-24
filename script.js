@@ -25,6 +25,8 @@ let dropList = document.getElementById('dropdownHover')
 let tree = document.querySelector('.tree')
 let thirty = document.querySelector('.thirty')
 
+let randomnumber = []
+
 
 
 
@@ -149,8 +151,9 @@ function CreatePuzzlePieces () {
         'text-black',
         'w-[150px]',
         'h-[150px]',
-        'tallscreen:w-[125px]',
-        'tallscreen:h-[125px]',
+        'tallscreen:w-[130px]',
+        'tallscreen:h-[130px]',
+        'tallscreen:m-0',
         'm-1',
         'p-2',
         'no-repeat',
@@ -160,6 +163,7 @@ function CreatePuzzlePieces () {
         'opacity-80',
         'hover:opacity-100',
         'pointer-cursor'
+ 
       );
 
       puzgame.setAttribute('data-id', element);
@@ -169,8 +173,27 @@ function CreatePuzzlePieces () {
       grid[row][col] = puzgame;
       puzzlePieces[row][col] = puzgame;
       initialPositions[row][col] = { row, col }; 
-      puzgame.style.left = `${col * 155}px`;
-      puzgame.style.top = `${row * 155}px`;
+      //puzgame.style.left = `${col * 155}px`;
+      //puzgame.style.top = `${row * 155}px`;
+
+function setLeftTopStyles() {
+  if (window.matchMedia('(min-width: 640px)').matches) {
+
+    puzgame.style.left = `${col * 155}px`;
+    puzgame.style.top = `${row * 155}px`;
+  } else {
+
+    puzgame.style.left = `${col * 135}px`;
+    puzgame.style.top = `${row * 135}px`;
+  }
+}
+
+
+setLeftTopStyles();
+
+
+const mediaQuery = window.matchMedia('(min-width: 640px)');
+mediaQuery.addEventListener('change',setLeftTopStyles);
       puzgame.style.backgroundImage = `url("${last}")`;
       const backgroundPositionX = `-${colIndex * 150}px`;
       const backgroundPositionY = `-${rowIndex * 150}px`;
@@ -192,15 +215,31 @@ dropButton.addEventListener('click', function(){
  
 })
 
+function runLoop(j) {
+  if (j === 0) {
+    return;
+  }
+
+  
+  shuffle(() => {
+    console.log(j);
+    j--;
+
+
+    setTimeout(() => runLoop(j), 1000);
+  });
+}
+
 tree.addEventListener('click', function(){
   dropList.classList.add('hidden')
   dropButton.classList.add('hidden')
   PuzzleImageContainer.classList.remove('pointer-events-none')
   PuzzleImageContainer.classList.add('cursor-pointer')
   shuffletext.classList.add('hidden')
-  shuffle()
-  //start shuffle 
-  
+
+  let initialJJ = 3
+  runLoop(initialJJ)
+
 })
 
 thirty.addEventListener('click', function(){
@@ -209,18 +248,26 @@ thirty.addEventListener('click', function(){
   PuzzleImageContainer.classList.remove('pointer-events-none')
   PuzzleImageContainer.classList.add('cursor-pointer')
   shuffletext.classList.add('hidden')
-  shuffle()
-  
-  //Start shuffle
+
+  let initialJ = 30
+runLoop(initialJ);
+
+
 })
 
 
 
-// Create a function that will compare puzzlePieces[pieces] are in the same cordinates as as grid[pieces] if piece is border color = green, not then border color == red
-
-let listofMoves = [[0, 0]]
 
 
+
+
+
+
+let listofMoves = [[0,0], [0,0]]
+let possible_moves = []
+let new_possible = []
+
+let counterofusermoves = 0
 
  // const hiddenElement = document.querySelector('[data-id="1"]');
   //hiddenElement.classList.add('hidden');
@@ -255,20 +302,21 @@ let listofMoves = [[0, 0]]
             setTimeout(() => {
               element.style.transition = '';
               tempElement.style.transition = '';
-            }, 500); // 500ms is the duration of the transition
+            }, 500); 
   
             
             currentRow = targetRow;
             currentCol = targetCol;
             compare()
-            console.log(get_possible_moves())
+            complete()
+            
+            console.log(new_possible)
 
             let move = [targetRow, targetCol]
 
             listofMoves.push(move)
-            
-           
-            
+            counterofusermoves++
+            console.log(counterofusermoves)
             
 
           }
@@ -305,117 +353,120 @@ let listofMoves = [[0, 0]]
       }
     }
   }
+
+// complete this
+function complete() {
+  
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      if (grid[i][j] !== puzzlePieces[i][j]) {
+        // If any element is not equal, exit the function
+        return;
+      }
+    }
+  }
+
+
+  puzzleContainer.classList.add('hidden');
+  congrats.classList.remove('hidden');
+}
+
+
   
 // Store the ONLY last move 
-let possible_moves = []
+
 
 // last_move initial = 0, 0, after that findElementPos is the lastmove
 
 
 
 
-function get_possible_moves() {
+function getRandomMove() {
+  // if last move in the possible_moves, remove
+  possible_moves.splice(0, possible_moves.length);
 
-  // if last move in the possible_moves remove
-  
-  possible_moves.splice(0, possible_moves.length)
- 
-   
-  let row =  findElementPosition(hiddenElement).row
-  let col = findElementPosition(hiddenElement).col
+  let row = findElementPosition(hiddenElement).row;
+  let col = findElementPosition(hiddenElement).col;
 
   if (row === 1) {
-    possible_moves.push([row - 1, col], [row + 1, col])
-  } else if (row < 1) {
-    possible_moves.push([row + 1, col])
-  } else {
-    possible_moves.push([row - 1, col])
+      possible_moves.push([row - 1, col], [row + 1, col]);
+  } else if (row === 0) {
+      possible_moves.push([row + 1, col]);
+  } else if (row === 2) {
+      possible_moves.push([row - 1, col]);
   }
 
   if (col === 1) {
-    possible_moves.push([row, col - 1], [row, col + 1])
-  } else if (col < 1) {
-    possible_moves.push([row, col  + 1])
-  } else {
-    possible_moves.push([row, col  - 1])
-  }
-  
-
-  
-
-  for (let i = 0; i < possible_moves.length; i++) {
-    let isEqual = true;
-  
-    for (let j = 0; j < possible_moves[i].length; j++) {
-      if (possible_moves[i][j] !== listofMoves[listofMoves.length - 1][j]) {
-        isEqual = false;
-        break;
-      }
-    }
-  
-    if (isEqual) {
-      possible_moves.splice(i, 1);
-      i--;
-
-    } else {
-      
-    }
+      possible_moves.push([row, col - 1], [row, col + 1]);
+  } else if (col === 0) {
+      possible_moves.push([row, col + 1]);
+  } else if (col === 2) {
+      possible_moves.push([row, col - 1]);
   }
 
-  let randomnum =  possible_moves[Math.floor(Math.random() * possible_moves.length)]
+  let lastmove = listofMoves[listofMoves.length - 2];
 
-  
-  return randomnum; 
-  
+
+  console.log('listofmoves', listofMoves)
+
+
+  let filteredMoves = possible_moves.filter(move => {
+      return !(move[0] === lastmove[0] && move[1] === lastmove[1]);
+  });
+
+
+  randomMove = filteredMoves[Math.floor(Math.random() * filteredMoves.length)];
+
+  console.log("Random Move:", randomMove, 'filtered: ', filteredMoves);
 }
 
 
-function shuffle() {
-  let randomnum =  possible_moves[Math.floor(Math.random() * possible_moves.length)]
-  let j = 3
 
-while (j !== 0 ) {
 
-    let targetRow = findElementPosition(randomnum).row;
-    let targetCol = findElementPosition(randomnum).col;
-    let currentRow = findElementPosition(hiddenElement).row;
-    let currentCol = findElementPosition(hiddenElement).col;
 
-      let tempoElement = puzzlePieces[currentRow][currentCol];
-      puzzlePieces[currentRow][currentCol] = puzzlePieces[targetRow][targetCol];
-      puzzlePieces[targetRow][targetCol] = tempoElement;
 
-      randomnum.style.transition = 'top 0.5s, left 0.5s';
-      tempoElement.style.transition = 'top 0.5s, left 0.5s';
+function shuffle(callback) {
+getRandomMove()
 
-      let tempoTop = tempoElement.style.top;
-      let tempoLeft = tempoElement.style.left;
-      tempoElement.style.top = randomnum.style.top;
-      tempoElement.style.left = randomnum.style.left;
-      randomnum.style.top = tempoTop;
-      randomnum.style.left = tempoLeft;
+  let element = puzzlePieces[randomMove[0]][randomMove[1]];
+  let targetRow = randomMove[0];
+  let targetCol = randomMove[1];
+  let currentRow = findElementPosition(hiddenElement).row;
+  let currentCol = findElementPosition(hiddenElement).col;
 
-      setTimeout(() => {
-        randomnum.style.transition = '';
-        tempoElement.style.transition = '';
-      }, 500); // 500ms is the duration of the transition
+  let tempElement = puzzlePieces[currentRow][currentCol];
+  puzzlePieces[currentRow][currentCol] = puzzlePieces[targetRow][targetCol];
+  puzzlePieces[targetRow][targetCol] = tempElement;
 
-      
-      currentRow = targetRow;
-      currentCol = targetCol;
-      j--;
+  element.style.transition = 'top 0.5s, left 0.5s';
+  tempElement.style.transition = 'top 0.5s, left 0.5s';
+
+  let tempTop = tempElement.style.top;
+  let tempLeft = tempElement.style.left;
+  tempElement.style.top = element.style.top;
+  tempElement.style.left = element.style.left;
+  element.style.top = tempTop;
+  element.style.left = tempLeft;
+
+  setTimeout(() => {
+    element.style.transition = '';
+    tempElement.style.transition = '';
+
+    currentRow = targetRow;
+    currentCol = targetCol;
+    compare();
+
+    let move = [targetRow, targetCol];
+
+    listofMoves.push(move);
+
     
+    if (callback) {
+      callback();
     }
-
-      
-     
-      
-      
-
-    
-
-
+  }, 500); // 500ms is the duration of the transition
 }
+
 
 
 
