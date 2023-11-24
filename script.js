@@ -24,6 +24,7 @@ let dropButton = document.getElementById('dropdownHoverButton')
 let dropList = document.getElementById('dropdownHover')
 let tree = document.querySelector('.tree')
 let thirty = document.querySelector('.thirty')
+const movesText = document.querySelector('#congrats h2');
 
 let randomnumber = []
 
@@ -67,11 +68,6 @@ startButton.addEventListener('click', function (){
 })
 
 
-// dropdown 
-
-
-
-
 
 const doggie_img = document.createElement('img')
 doggie_img.src = 'dog.jpeg'
@@ -93,7 +89,6 @@ gameStartButton.addEventListener('click', function(){
 
 })
 
-// Image selection
 let last = 'cat.jpeg'
 pickButton.forEach((btn) => {
   btn.addEventListener('click', function () {
@@ -110,7 +105,7 @@ pickButton.forEach((btn) => {
         last = 'panda.jpeg'
       }
       CreatePuzzlePieces()
-      workingPuzzle()
+      
       
       
       
@@ -151,8 +146,8 @@ function CreatePuzzlePieces () {
         'text-black',
         'w-[150px]',
         'h-[150px]',
-        'tallscreen:w-[130px]',
-        'tallscreen:h-[130px]',
+        'tallscreen:w-[125px]',
+        'tallscreen:h-[125px]',
         'tallscreen:m-0',
         'm-1',
         'p-2',
@@ -183,8 +178,8 @@ function setLeftTopStyles() {
     puzgame.style.top = `${row * 155}px`;
   } else {
 
-    puzgame.style.left = `${col * 135}px`;
-    puzgame.style.top = `${row * 135}px`;
+    puzgame.style.left = `${col * 130}px`;
+    puzgame.style.top = `${row * 130}px`;
   }
 }
 
@@ -217,41 +212,43 @@ dropButton.addEventListener('click', function(){
 
 function runLoop(j) {
   if (j === 0) {
+    PuzzleImageContainer.classList.remove('pointer-events-none')
     return;
   }
 
   
   shuffle(() => {
-    console.log(j);
+
     j--;
+    
 
-
-    setTimeout(() => runLoop(j), 1000);
+    setTimeout(() => runLoop(j), 500);
   });
 }
 
 tree.addEventListener('click', function(){
   dropList.classList.add('hidden')
   dropButton.classList.add('hidden')
-  PuzzleImageContainer.classList.remove('pointer-events-none')
-  PuzzleImageContainer.classList.add('cursor-pointer')
+  //PuzzleImageContainer.classList.add('cursor-pointer')
   shuffletext.classList.add('hidden')
 
   let initialJJ = 3
   runLoop(initialJJ)
+  //PuzzleImageContainer.classList.remove('pointer-events-none')
+  workingPuzzle()
 
 })
 
 thirty.addEventListener('click', function(){
   dropList.classList.add('hidden')
   dropButton.classList.add('hidden')
-  PuzzleImageContainer.classList.remove('pointer-events-none')
-  PuzzleImageContainer.classList.add('cursor-pointer')
+  //PuzzleImageContainer.classList.add('cursor-pointer')
   shuffletext.classList.add('hidden')
 
   let initialJ = 30
 runLoop(initialJ);
 
+workingPuzzle()
 
 })
 
@@ -272,6 +269,7 @@ let counterofusermoves = 0
  // const hiddenElement = document.querySelector('[data-id="1"]');
   //hiddenElement.classList.add('hidden');
   function workingPuzzle() {
+    PuzzleImageContainer.classList.add('cursor-pointer')
     puzzlePieces.forEach((row, rowIndex) => {
       row.forEach((element, colIndex) => {
         element.addEventListener('click', () => {
@@ -310,14 +308,14 @@ let counterofusermoves = 0
             compare()
             complete()
             
-            console.log(new_possible)
+
 
             let move = [targetRow, targetCol]
 
             listofMoves.push(move)
             counterofusermoves++
-            console.log(counterofusermoves)
-            
+
+            console.log(listofMoves)
 
           }
         });
@@ -361,6 +359,7 @@ function complete() {
     for (let j = 0; j < grid[i].length; j++) {
       if (grid[i][j] !== puzzlePieces[i][j]) {
         // If any element is not equal, exit the function
+        movesText.textContent = `Moves you made: ${counterofusermoves  + 2}`;
         return;
       }
     }
@@ -407,7 +406,7 @@ function getRandomMove() {
   let lastmove = listofMoves[listofMoves.length - 2];
 
 
-  console.log('listofmoves', listofMoves)
+
 
 
   let filteredMoves = possible_moves.filter(move => {
@@ -417,12 +416,8 @@ function getRandomMove() {
 
   randomMove = filteredMoves[Math.floor(Math.random() * filteredMoves.length)];
 
-  console.log("Random Move:", randomMove, 'filtered: ', filteredMoves);
+
 }
-
-
-
-
 
 
 function shuffle(callback) {
