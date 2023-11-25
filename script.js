@@ -24,7 +24,7 @@ let dropButton = document.getElementById('dropdownHoverButton')
 let dropList = document.getElementById('dropdownHover')
 let tree = document.querySelector('.tree')
 let thirty = document.querySelector('.thirty')
-const movesText = document.querySelector('#congrats h2');
+const movesText = document.querySelector('#congrats');
 
 let randomnumber = []
 
@@ -34,27 +34,27 @@ let randomnumber = []
 // slider function
 function slider(cards) {
     
-    countdown = setInterval(() =>{
-        count--;
-        
-        if (count==3) {
-            messageFirst.classList.add('hidden')
-            messageThird.classList.add('hidden')
-            messageSecond.classList.remove('hidden')
-        }
-        else if (count==2) {
-            messageFirst.classList.remove('hidden')
-            messageSecond.classList.add('hidden')
-        }
-        else if  (count == 1) {
-            count = 4;
-            messageFirst.classList.add('hidden')
-            messageThird.classList.remove('hidden')
-            setInterval(count)
-        }
+  countdown = setInterval(() =>{
+      count--;
+      
+      if (count==3) {
+          //messageFirst.classList.add('hidden')
+          //messageThird.classList.add('hidden')
+          //messageSecond.classList.remove('hidden')
+      }
+      else if (count==2) {
+          //messageFirst.classList.remove('hidden')
+          //messageSecond.classList.add('hidden')
+      }
+      else if  (count == 1) {
+          count = 4;
+          //messageFirst.classList.add('hidden')
+          //messageThird.classList.remove('hidden')
+          setInterval(count)
+      }
 
-    },2000)
-  
+  },2000)
+
 }
 slider()
 
@@ -344,7 +344,7 @@ let counterofusermoves = 0
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         if (grid[i][j] === puzzlePieces[i][j]) {
-          puzzlePieces[i][j].style.borderColor = 'green';
+          puzzlePieces[i][j].style.borderColor = 'rgb(168, 55, 239)';
         } else {
           puzzlePieces[i][j].style.borderColor = 'red';
         }
@@ -352,6 +352,7 @@ let counterofusermoves = 0
     }
   }
 
+  let message = document.getElementById('messages')
 // complete this
 function complete() {
   
@@ -365,9 +366,10 @@ function complete() {
     }
   }
 
-
-  puzzleContainer.classList.add('hidden');
-  congrats.classList.remove('hidden');
+  message.classList.remove('hidden')
+  puzzleContainer.classList.add('pointer-events-none');
+  mainContainer.style.borderStyle.remove
+  //congrats.classList.remove('hidden');
 }
 
 
