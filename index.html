@@ -13,6 +13,19 @@
       'tallscreen': {'raw':'(max-aspect-ratio: 12/20)'},
             },
             extend: {
+              animation: {
+        fade: 'fadeOut 5s ease-in-out',
+      }, 
+            // that is actual animation
+            keyframes: theme => ({
+        fadeOut: {
+          '0%': { backgroundColor: theme('colors.black') },
+          '100%': { backgroundColor: theme('colors.transparent') },
+        },
+      }),
+    
+              
+              
               colors: {
                 clifford: '#da373d',
               }
@@ -22,30 +35,96 @@
   </script>
   <style>
     .selected:focus {
-      border-color: rgb(239, 55, 55);
+      border-color: rgb(168, 55, 239);
       border-width: 5px;
       opacity: 100%;
       
     }
+    /* color, font, text, 100% width, etc. */
+.subheading {
+  background-color: #00070b;
+  @apply flex w-full self-center relative;
+  @apply font-sans text-base text-white text-center;
+}
+/* position: relative is required to keep spans with position: absolute inside .subheading */
+/* make each span width 50% of .subheading's width */
+.subheading span {
+  @apply w-1/2 px-2;
+}
+/* this is needed to justify spans because they're being positioned absolutely */
+.en.subheading {
+  @apply justify-end;
+}
+/* overlap each .tech-adj one over the other so that each word fades in and out in its place and without displacing other spans */
+.en.subheading .tech-adj:nth-child(-n + 4){
+  position: absolute;
+
+}
+/* hide the first 3 tech-adj */
+.en.subheading .tech-adj:nth-child(-n + 3){
+  opacity: 0;
+}
+
+/* Use opacity to achieve the fade-in/out effect. */
+@keyframes changeText {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+/* Animate every .tech-adj every 8s infinitely */
+.subheading .tech-adj {
+  animation: changeText 10s infinite;
+}
+/* This is the "Beautiful" span and is the 1st to be animated after a 1 second delay */
+.en.subheading .tech-adj:nth-child(4) {
+  animation-delay: 2s;
+}
+/* This is the "Useful" span and is the 2nd to be animated after a 3 seconds delay */
+.en.subheading .tech-adj:nth-child(3) {
+  animation-delay: 4s;
+}
+/* This is the "Innovative" span and is the 3rd to be animated after a 5 seconds delay */
+.en.subheading .tech-adj:nth-child(2) {
+  animation-delay: 6s;
+}
+/* This is the Empowering" span and is the 4th to be animated after a 7 seconds delay */
+.en.subheading .tech-adj:nth-child(1) {
+  animation-delay: 9s;
+}
+
 
   </style>
 
 </head>
 <body class=" h-full bg-white dark:bg-black text-white  flex justify-center items-center">
-    <div id="container" class="mx-auto widescreen:w-full  tallscreen:w-full p-4 flex justify-center items-center flex-col h-screen">
+    <div id="container" class="mx-auto widescreen:w-full opacity-100 text-white bg-white tallscreen:w-full p-4 flex justify-center items-center flex-col h-screen">
         <div id="hello-puzzle" class="m-12 md:w-xl text-center ">
             <h1 id="message" class="text-4xl text-black dark:text-white md:text-2xl md:text-center text-center ">Welcome to 8 Puzzle!</h1>
         </div>
-        <div id="slider" class="drop-shadow-lg shadow-cyan-500/50 border rounded-lg tallscreen:w-[280px] tallscreen:h-[300px] widescreen:w-[400px] widescreen:h-[400px] h-[400px] w-[400px] text-black flex justify-center items-center text-2xl  dark:text-white ">
-            <span class="card md:text-xl" id="first">GAME BY ATALIMON</span>
-            <span class="card hidden md:text-xl" id="second">WEB DEVELOPMENT!</span>
-            <span class="card hidden md:text-xl" id="third">ENJOY THE PUZZLE</span>
-        </div>
+        <div id="subheading en" class="subheading en drop-shadow-lg shadow-cyan-500/50 border rounded-lg tallscreen:w-[280px] tallscreen:h-[300px] widescreen:w-[500px] widescreen:h-[250px] h-[250px] w-[450px] text-black dark:text-white bg-white flex justify-center items-center text-2xl  dark:text-white ">
+            <span class="card md:text-xl text-center tech-adj" id="first">GAME BY ATALIMON</span>
+            <span class="card  md:text-xl text-center tech-adj" id="second">WEB DEVELOPMENT!</span>
+            <span class="card  md:text-xl text-center tech-adj" id="thir">HELLO ASMAN!</span>
+            <span class="card  md:text-xl text-center tech-adj" id="thid">HELLO WORLD!</span>
+            <span class="card  md:text-xl text-center tech-adj" id="tird">ENJOY THE PUZZLE</span>
+          </div>
         <div id="start-button" class="m-12 text-xl text-black">
-            <button id="start" class="bg-red-500 text-white p-2 border rounded-lg hover:bg-white hover:text-black hover:drop-shadow-xl dark: text-white bg-red-500">START</button>
+            <button id="start" class=" w-32 h-10 animate-pulse bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white  border rounded-lg hover:bg-white hover:text-black hover:drop-shadow-xl dark: text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-center ">START</button>
         </div>
     </div>
-    <div id="game-container" class="mx-auto widescreen:w-4/6  tallscreen:w-full p-4 flex justify-center items-center flex-col h-screen hidden">
+    <div id="game-container" class="mx-auto widescreen:w-4/6  tallscreen:w-full p-4 flex justify-center items-center flex-col h-screen hidden ">
         <div id="pick-puzzle" class="m-8">
             <h1 id="pick-puzzle-message" class="text-4xl text-black dark:text-white">Pick Your Game!</h1>
         </div>
@@ -55,7 +134,7 @@
             <button class="opacity-60 border p-1 game widescreen:w-[220px] widescreen:h-48 tallscreen:w-[120px] tallscreen:h-[120px] m-2 rounded-xl md:w-xl" id="option-3"><img class="imger w-full h-full object-cover rounded-xl" src="panda.jpeg"></button>
         </div>
         <div id="pick-button" class="m-8 text-xl text-black">
-            <button id="start-game" class="bg-red-500 text-white p-2 border rounded-lg hover:bg-white hover:text-black hover:drop-shadow-xl dark: text-white bg-red-500">Choose</button>
+            <button id="start-game" class="w-32 h-10 animate-pulse bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white  border rounded-lg hover:bg-white hover:text-black hover:drop-shadow-xl dark: text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-center">NEXT</button>
         </div>
     </div>
     <div id="puzzle-container" class=" p-4 flex justify-center items-center flex-col h-[900px] w-screen hidden">
@@ -66,12 +145,13 @@
             <h2 id="shuffle-text" class="text-black  text-2xl  dark:text-white">Choose Shuffle Count</h2>
         </div>
               
-<button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="w-[170px] text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800" type="button">Dropdown hover <svg class="w-2 h-2 ms-3" aria-hidden="true"  fill="none" viewBox="0 0 10 6">
+<button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="w-[170px] text-white bg-red-700 hover:bg-indigo-800 focus:ring-4 animate-pulse :outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800" type="button">Dropdown hover <svg class="w-2 h-2 ms-3" aria-hidden="true"  fill="none" viewBox="0 0 10 6">
   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
   </svg>
   </button>
+  <button id="wait" type="button" class="bg-indigo-500 " disabled> </button>
   
-  <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+  <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-500">
       <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
         <li>
           <a class=" tree block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Easy 3</a>
@@ -81,15 +161,18 @@
         </li>
       </ul>
   </div>
-              
-              </div>
+  <div id="messages" class=" hidden subheading en drop-shadow-lg shadow-cyan-500/50 border rounded-lg bg-white tallscreen:w-[300px] tallscreen:h-[60px] widescreen:w-[300px] widescreen:h-[60px] h-[60px] w-[300px] text-black flex justify-center items-center text-2xl  dark:text-white ">
+    <span class="card md:text-xl text-center tech-adj" id="first">You Did it!</span>
+    <span class="card  md:text-xl text-center tech-adj" id="second">Congratulations</span>
+    <span class="card  md:text-xl text-center tech-adj" id="thir">Press F5 to Start Over!</span>
+    <span id="congrats" class="card  md:text-xl text-center tech-adj"></span>
+    <span class="card  md:text-xl text-center tech-adj" id="tird">Thank you For playing!</span>
+  </div>           
+  </div>
               
     </div>
     </div>
-    <div id="congrats" class="mx-auto widescreen:w-full  tallscreen:w-full p-4 flex justify-center items-center flex-col h-screen hidden">
-          <h1 class="md:text-xl text-4xl">You Solved the Puzzle!</h1>
-          <h2 class="md:text-xl text-2xl">Moves you made: </h2>
-      </div>
+
 
   </div>
  
