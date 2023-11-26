@@ -461,7 +461,7 @@ getRandomMove()
     if (callback) {
       callback();
     }
-  }, 500); // 500ms is the duration of the transition
+  }, 400); // 500ms is the duration of the transition
 }
 
 
